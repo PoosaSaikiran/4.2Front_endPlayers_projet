@@ -1,0 +1,12 @@
+<form (ngSubmit)="addPlayer()">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" [(ngModel)]="formData.name" required>
+  
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" [(ngModel)]="formData.age" required>
+  
+    <!-- Add more form fields as needed -->
+  
+    <button type="submit">Add Player</button>
+  </form>
+  

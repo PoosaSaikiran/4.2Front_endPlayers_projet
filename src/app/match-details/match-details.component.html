@@ -1,0 +1,165 @@
+<div class="card shadow" style="border-radius: 32px;">
+  <div class="card-header bg-white p-2 px-3">
+    <div class="row">
+      <div class="col-xl-6">
+        Match Form
+      </div>
+      <div class="col-xl-6">
+        <div class="float-end" *ngIf="!isAddEdt">
+          <button type="button" class="btn btn-sm btn-primary text-center" 
+            (click)="isAddEdt=!isAddEdt;aeTyp='a';onRst()">Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-2">
+    <div class="row">
+      <div *ngIf="!isAddEdt">
+        <div class="col-xl-12">
+          <div class="table-responsive mt-0">
+            <table class="table table-bordered table-striped table-sm mb-2">
+              <thead>
+                <tr>
+                  <th>Sl.No</th>
+                  <th>match_id</th>
+                  <th>league_name</th>
+                  <th>Date</th>
+                  <th>opponent</th>
+                  <th>Result</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let item of playersList; let i=index">
+                      <td class="text-center">{{i+1}}</td>
+                      <td>{{item.match_id}}</td>
+                      <td>{{item.league_name}}</td>
+                      <td>{{item.date}}</td>
+                      <td>{{item.opponent}}</td>
+                      <td>{{item.result}}</td>
+                      <td>
+                          <button type="button" class="btn btn-sm btn-primary text-center" title="Edit"
+                              (click)="isAddEdt=!isAddEdt;aeTyp='e';onEdit(item._id);">Edit
+                          </button>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-danger text-center" title="delete"
+                        (click)="onDelete(item._id);">Delete
+                    </button>
+                      </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-xl-4">
+          <div class="table-responsive mt-0">
+            <table class="table table-bordered table-striped table-sm mb-2">
+              <thead>
+                <tr>
+                  <th>win/Loss</th>
+                  <th>count</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let item of winLossCount">
+                      <td>{{item._id}}</td>
+                      <td>{{item.count}}</td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="isAddEdt">
+        <form [formGroup]="matchForm" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class='col-xl-2'>
+              <label for="match_id">Match ID:</label>
+              <input type="text" id="match_id" formControlName="match_id"><br>
+            </div>
+            <div class='col-xl-2'>
+              <label for="league_name">League Name:</label>
+              <input type="text" id="league_name" formControlName="league_name"><br>
+            </div>
+            <div class='col-xl-2'>
+              <label for="date">Date:</label>
+              <input type="text" id="date" formControlName="date"><br>
+            </div>
+            <div class='col-xl-2'>
+              <label for="opponent">Opponent:</label>
+              <input type="text" id="opponent" formControlName="opponent"><br>
+            </div>
+            <div class='col-xl-2'>
+              <label for="result">Result:</label>
+              <input type="text" id="result" formControlName="result"><br>
+            </div>
+          </div>
+          <div formArrayName="players">
+            <div *ngFor="let player of players.controls; let i=index" [formGroupName]="i">
+              <h3>Player {{ i + 1 }}</h3>
+              <div class="row">
+                <div class="col-xl-2">
+                  <label for="name">Name:</label>
+                  <input type="text" id="name" formControlName="name"><br>
+                </div>
+                <div class="col-xl-2">
+                  <label for="rushing_yards">Rushing Yards:</label>
+                  <input type="number" id="rushing_yards" formControlName="rushing_yards"><br>
+                </div>
+                <div class="col-xl-2">
+                  <label for="touchdowns_thrown">Touchdowns Thrown:</label>
+                  <input type="number" id="touchdowns_thrown" formControlName="touchdowns_thrown"><br>
+                </div>
+                <div class="col-xl-2">
+                  <label for="sacks">Sacks:</label>
+                  <input type="number" id="sacks" formControlName="sacks"><br>
+                </div>
+                <div class="col-xl-2">
+                  <label for="catches_made">Catches Made:</label>
+                  <input type="number" id="catches_made" formControlName="catches_made"><br>
+                </div>
+                <fieldset formGroupName="field_goals">
+                  <legend>Field Goals</legend>
+                  <div class="row">
+                    <div class="col-xl-2">
+                      <label for="field_goals_made">Made:</label>
+                      <input type="number" id="field_goals_made" formControlName="made"><br>
+                    </div>
+                    <div class="col-xl-2">
+                      <label for="field_goals_missed">Missed:</label>
+                      <input type="number" id="field_goals_missed" formControlName="missed"><br>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3">
+            <button type="button" (click)="addPlayer()">Add Player</button><br><br>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer bg-white" *ngIf="isAddEdt">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="float-end">
+              <button type="button" class="btn btn-sm btn-success text-center me-2"
+                (click)="onSubmit();isAddEdt=!isAddEdt;" *ngIf="aeTyp == 'a'">Save
+              </button>
+              <button type="button" class="btn btn-sm btn-success text-center me-2"
+                (click)="onUpdate();isAddEdt=!isAddEdt;" *ngIf="aeTyp == 'e'">Update
+              </button>
+              <button type="button" class="btn btn-sm btn-danger text-center"
+                (click)="isAddEdt=!isAddEdt;LoadList();onRst();winLoss()">Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
